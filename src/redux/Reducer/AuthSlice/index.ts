@@ -4,13 +4,15 @@ import { login } from "../../Actions/auth";
 interface AuthProps {
     user: any;
     token: string;
-    message: string;
+    message?: string;
+    code?: number;
 }
 
 const initialState: AuthProps = {
     user: null,
     token: "",
     message: "",
+    code: 0,
 };
 
 const authSlice = createSlice({
@@ -23,12 +25,17 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(login.fulfilled, (state, action) => {
-            state.user = action.payload.user;
-            state.token = action.payload.token;
+            state.user = action.payload.data.user;
+            state.token = action.payload.data.token;
             state.message = action.payload.message;
+            state.code = action.payload.code;
         });
         builder.addCase(login.rejected, (state, action) => {
-            state.message = action.error.message || "";
+            state.message = action.error.message;
+            state.code = Number(action.error.code);
+        });
+        builder.addCase(login.pending, (state) => {
+            state.message = "Loading...";
         });
     },
 });
