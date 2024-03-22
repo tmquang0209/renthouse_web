@@ -1,6 +1,5 @@
 import React from "react";
-import Header from "../components/Header";
-import Container from "../components/Container";
+import { Container, Header } from "../components";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { selectMessage, selectToken, selectUser } from "../redux/Reducer/AuthSlice";
 import { login } from "../redux/Actions";
