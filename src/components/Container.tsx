@@ -1,15 +1,17 @@
 import React from "react";
 import { ContainerProps } from "../constants/interface";
 
-
-
 const Container = (props: ContainerProps) => {
-    const { children, style, gradient } = props;
+    const { children, style, gradient, className } = props;
 
     return (
-        <div className={`container ${gradient && "bg-gradient-to-r from-primary to-secondary"}`} style={style}>
-            {children}
-        </div>
+        <>
+            <div className={`${gradient && "bg-gradient-to-br from-primary to-secondary"} h-screen w-screen py-10`}>
+                <div className={`container h-full ${className}`} style={style}>
+                    {children}
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -19,7 +19,7 @@ const Home = () => {
         <>
             <Header />
             <Container gradient>
-                <main className="flex flex-wrap">
+                <main className="flex h-full flex-wrap">
                     <h1>Home</h1>
                     <button
                         onClick={() => {

@@ -2,14 +2,20 @@ export interface ContainerProps {
     children: React.ReactNode;
     style?: React.CSSProperties;
     gradient?: boolean;
+    className?: string;
 }
 
 export interface BtnProps {
-    Style: string;
-    children: string
+    children: React.ReactNode;
+    onClick?: () => void;
+    type?: "button" | "submit" | "reset";
+    className?: string;
+    style?: React.CSSProperties;
+    disabled?: boolean;
+    loading?: boolean;
 }
 
 export interface router {
     path: string;
-    element: any
+    element: any;
 }

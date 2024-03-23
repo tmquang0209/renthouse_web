@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { Link } from "react-router-dom";
 
 const menu = [
@@ -18,9 +18,9 @@ const menu = [
 
 const Header = () => {
     return (
-        <header className="w-full h-[60px] shadow-md bg-white flex items-center sticky top-0 z-[9999]" >
-            <nav className="wrapper w-full h-auto  flex flex-row justify-between items-center">
-                <h1 className="text-[30px] text-black font-[600]  leading-[45px] tracking-[0.4px] cursor-pointer">LOGO</h1>
+        <header className="sticky top-0 z-[9999] flex h-[60px] w-full items-center bg-white px-10 shadow-md">
+            <nav className="wrapper flex h-auto  w-full flex-row items-center justify-between">
+                <h1 className="cursor-pointer text-[30px] font-[600]  leading-[45px] tracking-[0.4px] text-black">LOGO</h1>
                 {/* <div>
                     <ul className="flex flex-row gap-10">
                         {menu.map((item, key) => (
@@ -36,17 +36,16 @@ const Header = () => {
                 </div> */}
                 <div>
                     <ul className="flex flex-row gap-[15px] ">
-                        <li className=" flex flex-row items-center gap-[10px] cursor-pointer">
+                        <li className=" flex cursor-pointer flex-row items-center gap-[10px]">
                             <i className="fa-solid fa-right-from-bracket text-[20px] text-textColor "></i>
-                            <Link to="/login" className="hover:text-primary text-[16px] text-textColor font-[400] ">
+                            <Link to="/login" className="text-[16px] font-[400] text-textColor hover:text-primary ">
                                 Đăng nhập
                             </Link>
-                        </li> 
-                        <li className="w-[2px] h-[25px] bg-textColor"> 
                         </li>
-                        <li className=" flex flex-row items-center gap-[10px] cursor-pointer">
+                        <li className="h-[25px] w-[2px] bg-textColor"></li>
+                        <li className=" flex cursor-pointer flex-row items-center gap-[10px]">
                             <i className="fa-regular fa-circle-user text-[20px] text-textColor "></i>
-                            <Link to="/register" className="hover:text-primary text-[16px] text-textColor font-[400] ">
+                            <Link to="/register" className="text-[16px] font-[400] text-textColor hover:text-primary ">
                                 Đăng ký
                             </Link>
                         </li>

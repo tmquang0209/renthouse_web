@@ -1,11 +1,40 @@
-import React from 'react'
-import { BtnProps } from '../constants/interface'
+import React from "react";
+import { BtnProps } from "../constants/interface";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
-const Button:React.FC<BtnProps> = ({Style,children}) => {
+const ButtonComponent = (props: BtnProps) => {
+    const { children, onClick, className, style, disabled, loading, type } = props;
+
     return (
-        <div className={`${Style} py-[9px] px-[20px] cursor-pointer  rounded-[4px]`}>
-            <h1 className='text-white font-[500] text-[18px] text-center'>{children}</h1>
-        </div>
-    )
-}
-export default Button
+        <>
+            <button
+                type={type ? type : "button"}
+                className={`${className} w-32 rounded-sm bg-colorBtn px-1 py-2 text-white`}
+                onClick={onClick}
+                style={style}
+                disabled={disabled}
+            >
+                {loading && (
+                    <Spin
+                        style={{
+                            paddingRight: 5,
+                        }}
+                        indicator={
+                            <LoadingOutlined
+                                style={{
+                                    fontSize: 20,
+                                    color: "white",
+                                }}
+                                spin
+                            />
+                        }
+                    />
+                )}
+                {children}
+            </button>
+        </>
+    );
+};
+
+export default ButtonComponent;
