@@ -6,7 +6,7 @@ const Container = (props: ContainerProps) => {
 
     return (
         <>
-            <div className={`${gradient && "bg-gradient-to-br from-primary to-secondary"} h-screen w-screen py-10`}>
+            <div className={`${gradient && "bg-gradient-to-br from-primary to-secondary"} h-screen w-screen overflow-y-auto py-10`}>
                 <div className={`container h-full ${className}`} style={style}>
                     {children}
                 </div>
