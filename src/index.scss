@@ -19,3 +19,8 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+.wrapper {
+    @apply max-w-[1170px] mx-auto;
+}
+

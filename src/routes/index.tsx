@@ -1,20 +1,24 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NotFound from "../screens/NotFound";
 import Home from "../screens/Home";
 import Login from "../screens/Login";
+import Register  from "../screens/Register";
+import { router } from "../constants/interface";
 
-const Navigation = () => {
-    return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
-        </>
-    );
-};
-
-export default Navigation;
+export const PublicRouter:router[]=[
+    {
+        path: "/",
+        element: Home
+    },
+    {
+        path: "/login",
+        element: Login
+    },
+    {
+        path: "/register",
+        element: Register
+    },
+    {
+        path: "*",
+        element: NotFound
+    }
+]
