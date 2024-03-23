@@ -94,10 +94,10 @@ const Login = () => {
                         </div>
                         <div className="flex flex-col items-center p-5 text-center">
                             <h1 className="pb-5 text-2xl font-bold">Hoặc đăng nhập bằng</h1>
-                            <button className="flex gap-5 rounded-lg border-[1px] border-gray-200 px-7 py-3 font-bold">
+                            <ButtonComponent className="flex w-full gap-5 rounded-lg border-[1px] border-gray-200 bg-white px-7 py-3 font-bold">
                                 <img src="/img/gg.png" alt="" className="w-5" />
-                                Đăng nhập bằng Google
-                            </button>
+                                <p className="text-black">Đăng nhập bằng Google</p>
+                            </ButtonComponent>
                         </div>
                     </div>
 
