@@ -51,7 +51,7 @@ const Login = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2">
                         <div>
                             <form onSubmit={formik.handleSubmit}>
-                                <div className="flex flex-col gap-[10px] border-r-[1px] p-5">
+                                <div className="flex flex-col gap-[10px] p-5 sm:border-r-[1px]">
                                     <div>
                                         <label className="flex gap-[5px] text-[16px] font-[400] text-textColor">
                                             Tên đăng nhập
