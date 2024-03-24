@@ -12,8 +12,10 @@ const Home = () => {
     const dispatch = useAppDispatch();
 
     React.useEffect(() => {
-        console.log(user);
-    }, [user]);
+        if (!token) {
+            window.location.href = "/login";
+        }
+    }, [token]);
 
     return (
         <>

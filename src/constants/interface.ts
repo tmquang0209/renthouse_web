@@ -19,3 +19,8 @@ export interface router {
     path: string;
     element: any;
 }
+
+export interface tokenProps {
+    data: any;
+    time?: string;
+}

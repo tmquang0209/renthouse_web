@@ -8,6 +8,7 @@ import { object, string } from "yup";
 import { Link } from "react-router-dom";
 import ButtonComponent from "../components/Button";
 import { Alert } from "antd";
+import { clearMessage } from "../redux/Reducer/AuthSlice";
 
 const loginSchema = object().shape({
     username: string().required("Username is required").min(6, "Username must be at least 6 characters"),
@@ -22,6 +23,7 @@ const Login = () => {
     const dispatch = useAppDispatch();
 
     const handleSubmit = (values: any) => {
+        dispatch(clearMessage());
         dispatch(login(values));
     };
 
@@ -33,6 +35,16 @@ const Login = () => {
         onSubmit: handleSubmit,
         validationSchema: loginSchema,
     });
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            dispatch(clearMessage());
+        }, 1000);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [dispatch]);
 
     React.useEffect(() => {
         if (token) {
@@ -91,7 +103,7 @@ const Login = () => {
                                             type={success ? "success" : "error"}
                                             closable
                                             showIcon
-                                            className="font-bold text-red-500"
+                                            className={`font-bold ${success ? "text-green-500" : "text-red-500"}`}
                                         />
                                     )}
                                     <div className="flex flex-row items-center gap-[10px]">
