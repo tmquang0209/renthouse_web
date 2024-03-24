@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login } from "../../Actions/auth";
+import { userStatusCode } from "../../../constants/statusCode";
 
 interface AuthProps {
     user: any;
     token: string;
     message?: string;
     code?: number;
+    success?: boolean;
 }
 
 const initialState: AuthProps = {
@@ -13,6 +15,7 @@ const initialState: AuthProps = {
     token: "",
     message: "",
     code: 0,
+    success: false,
 };
 
 const authSlice = createSlice({
@@ -27,8 +30,9 @@ const authSlice = createSlice({
         builder.addCase(login.fulfilled, (state, action) => {
             state.user = action.payload.data.user;
             state.token = action.payload.data.token;
-            state.message = action.payload.message;
             state.code = action.payload.code;
+            state.message = userStatusCode[action.payload.code as keyof typeof userStatusCode];
+            state.success = action.payload.success || false;
         });
         builder.addCase(login.rejected, (state, action) => {
             state.message = action.error.message;
@@ -43,5 +47,7 @@ const authSlice = createSlice({
 export const selectUser = (state: { auth: AuthProps }) => state.auth.user;
 export const selectToken = (state: { auth: AuthProps }) => state.auth.token;
 export const selectMessage = (state: { auth: AuthProps }) => state.auth.message;
+export const selectCode = (state: { auth: AuthProps }) => state.auth.code;
+export const selectSuccess = (state: { auth: AuthProps }) => state.auth.success;
 
 export default authSlice.reducer;

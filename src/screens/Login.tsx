@@ -1,13 +1,13 @@
 import React from "react";
 import { Container, Header } from "../components";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { selectMessage, selectToken } from "../redux/Reducer/AuthSlice";
+import { selectMessage, selectSuccess, selectToken } from "../redux/Reducer/AuthSlice";
 import { useFormik } from "formik";
 import { login } from "../redux/Actions";
 import { object, string } from "yup";
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
 import ButtonComponent from "../components/Button";
+import { Alert } from "antd";
 
 const loginSchema = object().shape({
     username: string().required("Username is required").min(6, "Username must be at least 6 characters"),
@@ -17,6 +17,7 @@ const loginSchema = object().shape({
 const Login = () => {
     const token = useAppSelector(selectToken);
     const message = useAppSelector(selectMessage);
+    const success = useAppSelector(selectSuccess);
 
     const dispatch = useAppDispatch();
 
@@ -33,18 +34,18 @@ const Login = () => {
         validationSchema: loginSchema,
     });
 
-    // React.useEffect(() => {
-    //     if (token) {
-    //         window.location.href = "/";
-    //     }
-    // }, [token]);
+    React.useEffect(() => {
+        if (token) {
+            window.location.href = "/";
+        }
+    }, [token]);
 
     return (
         <>
             <Header />
             <Container gradient>
                 <div className="mx-auto flex w-fit flex-col items-center gap-[30px] bg-white p-[28px]">
-                    <div className="">
+                    <div className="w-full">
                         <h1 className="mb-[15px] text-[22px] font-[500] font-bold text-textColor">Đăng nhập</h1>
                         <div className="h-[1px] w-full bg-lineColor"></div>
                     </div>
@@ -84,11 +85,20 @@ const Login = () => {
                                             <p className="text-[12px] text-red-500">{formik.errors.password}</p>
                                         )}
                                     </div>
+                                    {message && (
+                                        <Alert
+                                            message={message}
+                                            type={success ? "success" : "error"}
+                                            closable
+                                            showIcon
+                                            className="font-bold text-red-500"
+                                        />
+                                    )}
                                     <div className="flex flex-row items-center gap-[10px]">
                                         <input type="checkbox" className="h-[20px] w-[20px]" />
                                         <label className="text-[16px] font-[400] text-textColor">Ghi nhớ đăng nhập</label>
                                     </div>
-                                    <ButtonComponent onClick={() => console.log("Clicked")}>Đăng nhập</ButtonComponent>
+                                    <ButtonComponent type="submit">Đăng nhập</ButtonComponent>
                                 </div>
                             </form>
                         </div>
