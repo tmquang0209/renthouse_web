@@ -24,3 +24,17 @@ export interface tokenProps {
     data: any;
     time?: string;
 }
+export interface Data {
+    fullName: string;
+    email: string;
+    password: string;
+    confirmPassword:string
+}
+
+export interface AuthProps {
+    user: any;
+    token: string;
+    message?: string;
+    code?: number;
+    success?: boolean;
+}

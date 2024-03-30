@@ -1,14 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login } from "../../Actions/auth";
 import { userStatusCode } from "../../../constants/statusCode";
+import { AuthProps } from "../../../constants/interface";
 
-interface AuthProps {
-    user: any;
-    token: string;
-    message?: string;
-    code?: number;
-    success?: boolean;
-}
+
 
 const initialState: AuthProps = {
     user: null,

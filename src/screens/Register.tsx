@@ -1,10 +1,65 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import * as Yup from 'yup';
 import ButtonComponent from "../components/Button";
+import { signInUser } from "../API/user";
+import { Data } from "../constants/interface";
 
+const registerSchema=Yup.object().shape({
+    fullName: Yup.string().required("Username is required"),
+    email: Yup.string().required("Email is required").email("Trường này không phải Email"),
+    password: Yup.string().required("Password is required").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,"Mật khẩu tối thiểu 8 ký tự ,bao gồm chữ cái hoa và thường,gồm 1 ký tự đặc biệt (#@$%,..."),
+    confirmPassword: Yup.string().required("Password confirmation is required").oneOf([Yup.ref('password')], 'Nhắc lại mật khẩu không đúng')
+});
 const Register: React.FC = () => {
+    const navigate=useNavigate()
+    const [messageBoolean,setMessageBoolean]=useState<boolean>(false)
+    const [message,setMessage]=useState<String>("Đăng ký thành công")
+    const [success,setSuccess]=useState<boolean>(true)
+    //state ẩn hiện
+    const [requireFullName, setRequireFullName] = useState<boolean>(true);
+    const [requireEmail, setRequireEmail] = useState<boolean>(true);
+    const [requirePassword, setRequirePassword] = useState<boolean>(true);
+    const [requireConfirmPassword, setRequireConfirmPassword] = useState<boolean>(true);
+    //state con mắt
+    const [hiddenPassword,setHiddenPassword]=useState<boolean>(true)
+    const [hiddenConfirmPassword,setHiddenConfirmPassword]=useState<boolean>(true)
+    //
+    const passwordRef=useRef<HTMLInputElement>(null)
+    const cofirmPassword=useRef<HTMLInputElement>(null)
+    const handleSubmit=async (values:Data)=>{
+        try {
+            await signInUser(values)
+            setMessageBoolean(true)
+            setMessage("Đăng ký thành công ")
+            setSuccess(true)
+            setTimeout(()=>{
+                setMessageBoolean(false)
+                navigate("/login")
+            },2000)
+        }
+        catch (err:any) {
+            setMessageBoolean(true)
+            setMessage("Đăng ký thất bại! ")
+            setSuccess(false)
+            setTimeout(()=>{
+            setMessageBoolean(false)
+            },10000)
+            throw new Error(`Lỗi! : ${err}`)
+        }
+    }
+    const formik=useFormik({
+        initialValues :{
+            fullName:"",
+            email:"",
+            password:"",
+            confirmPassword:""
+        },
+        onSubmit: handleSubmit,
+        validationSchema:registerSchema
+    })
     return (
         <div>
             <Header />
@@ -18,51 +73,14 @@ const Register: React.FC = () => {
                         <div className="">
                             <form
                                 className="flex flex-col gap-[30px]"
-                                // onSubmit={formik.handleSubmit}
+                                onSubmit={formik.handleSubmit}
                             >
-                                <div className="flex flex-col gap-[10px] ">
-                                    <div className="flex flex-row items-center gap-[6px] ">
-                                        <label className="text-[16px] text-textColor" htmlFor="username">
-                                            Họ và tên
-                                        </label>
-                                        <div className="">
-                                            <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <line
-                                                    y1="-0.5"
-                                                    x2="6.82787"
-                                                    y2="-0.5"
-                                                    transform="matrix(0.745607 0.666386 -0.650573 0.759444 0.637451 1.71728)"
-                                                    stroke="#CA0202"
-                                                />
-                                                <line
-                                                    y1="-0.5"
-                                                    x2="7.27718"
-                                                    y2="-0.5"
-                                                    transform="matrix(-0.699572 0.714562 -0.699572 -0.714562 5.72827 1.06728)"
-                                                    stroke="#CA0202"
-                                                />
-                                                <path d="M3.50098 0.742279L3.50098 7.24228" stroke="#CA0202" />
-                                                <path d="M7.00098 3.66728L0.000976682 3.66728" stroke="#CA0202" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <input
-                                        id="username"
-                                        className="w-[520px] rounded-[4px] border-[0.2px] border-lineColor px-[20px]  py-[12px] text-gray-700 placeholder:text-[16px] focus:border-blue-500 focus:outline-none focus:ring"
-                                        type="text"
-                                        placeholder="Vui lòng nhập tài khoản..."
-                                        name="username"
-                                        // value={formik.values.username}
-                                        // onChange={formik.handleChange}
-                                    />
-                                    {/* {formik.errors.username && formik.touched.username && <p>{formik.errors.username}</p>} */}
-                                </div>
                                 <div className="flex flex-col gap-[10px] ">
                                     <div className="flex flex-row items-center gap-[6px] ">
                                         <label className="text-[16px] text-textColor" htmlFor="email">
                                             Email
                                         </label>
-                                        <div className="">
+                                        {requireEmail && <div className="">
                                             <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <line
                                                     y1="-0.5"
@@ -81,7 +99,7 @@ const Register: React.FC = () => {
                                                 <path d="M3.50098 0.742279L3.50098 7.24228" stroke="#CA0202" />
                                                 <path d="M7.00098 3.66728L0.000976682 3.66728" stroke="#CA0202" />
                                             </svg>
-                                        </div>
+                                        </div>}
                                     </div>
                                     <input
                                         id="email"
@@ -89,17 +107,18 @@ const Register: React.FC = () => {
                                         type="email"
                                         placeholder="Vui lòng nhập mật khẩu..."
                                         name="email"
-                                        // value={formik.values.password}
-                                        // onChange={formik.handleChange}
+                                        value={formik.values.email}
+                                        onChange={formik.handleChange}
+                                        onFocus={()=>{return setRequireEmail(false)}}
                                     />
-                                    {/* {formik.errors.password && formik.touched.password && <p>{formik.errors.password}</p>} */}
+                                    {formik.errors.email && (<p className="text-[12px] mt-[-6px] text-red-500">{formik.errors.email}</p>)}
                                 </div>
                                 <div className="flex flex-col gap-[10px] ">
                                     <div className="flex flex-row items-center gap-[6px] ">
-                                        <label className="text-[16px] text-textColor" htmlFor="password">
-                                            Mật khẩu
+                                        <label className="text-[16px] text-textColor" htmlFor="fullName">
+                                            Họ và tên
                                         </label>
-                                        <div className="">
+                                        {requireFullName && <div className="">
                                             <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <line
                                                     y1="-0.5"
@@ -118,29 +137,81 @@ const Register: React.FC = () => {
                                                 <path d="M3.50098 0.742279L3.50098 7.24228" stroke="#CA0202" />
                                                 <path d="M7.00098 3.66728L0.000976682 3.66728" stroke="#CA0202" />
                                             </svg>
-                                        </div>
+                                        </div>}
+                                    </div>
+                                    <input
+                                        id="fullName"
+                                        className="w-[520px] rounded-[4px] border-[0.2px] border-lineColor px-[20px]  py-[12px] text-gray-700 placeholder:text-[16px] focus:border-blue-500 focus:outline-none focus:ring"
+                                        type="text"
+                                        placeholder="Vui lòng nhập tài khoản..."
+                                        name="fullName"
+                                        value={formik.values.fullName}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        onFocus={()=>{return setRequireFullName(false)}}
+                                    />
+                                    {formik.errors.fullName && (
+                                        <p className="text-[12px] mt-[-6px] text-red-500">{formik.errors.fullName}</p>
+                                    )}
+                                </div>
+
+                                <div className="flex flex-col gap-[10px] ">
+                                    <div className="flex flex-row items-center gap-[6px] ">
+                                        <label className="text-[16px] text-textColor" htmlFor="password">
+                                            Mật khẩu
+                                        </label>
+                                        {requirePassword && <div className="">
+                                            <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <line
+                                                    y1="-0.5"
+                                                    x2="6.82787"
+                                                    y2="-0.5"
+                                                    transform="matrix(0.745607 0.666386 -0.650573 0.759444 0.637451 1.71728)"
+                                                    stroke="#CA0202"
+                                                />
+                                                <line
+                                                    y1="-0.5"
+                                                    x2="7.27718"
+                                                    y2="-0.5"
+                                                    transform="matrix(-0.699572 0.714562 -0.699572 -0.714562 5.72827 1.06728)"
+                                                    stroke="#CA0202"
+                                                />
+                                                <path d="M3.50098 0.742279L3.50098 7.24228" stroke="#CA0202" />
+                                                <path d="M7.00098 3.66728L0.000976682 3.66728" stroke="#CA0202" />
+                                            </svg>
+                                        </div>}
                                     </div>
                                     <div className="relative">
                                         <input
                                             id="password"
                                             className="w-[520px] rounded-[4px] border-[0.2px] border-lineColor px-[20px]  py-[12px] text-gray-700 placeholder:text-[16px] focus:border-blue-500 focus:outline-none focus:ring"
-                                            type="password"
+                                            type={hiddenPassword===true?'password':'text'}
                                             placeholder="Vui lòng nhập mật khẩu..."
                                             name="password"
-                                            // value={formik.values.password}
-                                            // onChange={formik.handleChange}
+                                            value={formik.values.password}
+                                            onChange={formik.handleChange}
+                                            onFocus={()=>{return setRequirePassword(false)}}
+                                            ref={passwordRef}
                                         />
-                                        <i className="fa-regular fa-eye absolute right-[20px] top-[16px] cursor-pointer text-[20px] text-textColor"></i>
-                                        {/* <i class="fa-regular fa-eye-slash"></i> */}
+                                        <i 
+                                            onClick={()=>{
+                                                setHiddenPassword((pre)=>!pre)
+                                                if (passwordRef.current) {
+                                                    const input = passwordRef.current;
+                                                    input.focus();
+                                                }
+                                            }}
+                                            className={`fa-regular fa-eye${hiddenPassword===true?'':'-slash'} absolute right-[20px] top-[16px] cursor-pointer text-[20px] text-textColor`}>
+                                        </i>
                                     </div>
-                                    {/* {formik.errors.password && formik.touched.password && <p>{formik.errors.password}</p>} */}
+                                    {formik.errors.password && (<p className="text-[12px] mt-[-6px] text-red-500">{formik.errors.password}</p>)}
                                 </div>
                                 <div className="flex flex-col gap-[10px] ">
                                     <div className="flex flex-row items-center gap-[6px] ">
                                         <label className="text-[16px] text-textColor" htmlFor="confirmPassword">
                                             Nhắc lại mật khẩu
                                         </label>
-                                        <div className="">
+                                        {requireConfirmPassword && <div className="">
                                             <svg width="7" height="8" viewBox="0 0 7 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <line
                                                     y1="-0.5"
@@ -159,30 +230,46 @@ const Register: React.FC = () => {
                                                 <path d="M3.50098 0.742279L3.50098 7.24228" stroke="#CA0202" />
                                                 <path d="M7.00098 3.66728L0.000976682 3.66728" stroke="#CA0202" />
                                             </svg>
-                                        </div>
+                                        </div>}
                                     </div>
                                     <div className="relative">
                                         <input
-                                            id="password"
+                                            id="confirmPassword"
                                             className="w-[520px] rounded-[4px] border-[0.2px] border-lineColor px-[20px]  py-[12px] text-gray-700 placeholder:text-[16px] focus:border-blue-500 focus:outline-none focus:ring"
-                                            type="password"
+                                            type={hiddenConfirmPassword===true?'password':'text'}
                                             placeholder="Vui lòng nhập mật khẩu..."
-                                            name="password"
-                                            // value={formik.values.password}
-                                            // onChange={formik.handleChange}
+                                            name="confirmPassword"
+                                            value={formik.values.confirmPassword}
+                                            onChange={formik.handleChange}
+                                            onFocus={()=>{return setRequireConfirmPassword(false)}}
                                         />
-                                        <i className="fa-regular fa-eye absolute right-[20px] top-[16px] cursor-pointer text-[20px] text-textColor"></i>
-                                        {/* <i class="fa-regular fa-eye-slash"></i> */}
+                                        <i 
+                                            onClick={()=>{
+                                                setHiddenConfirmPassword((pre)=>!pre)
+                                                if (cofirmPassword.current) {
+                                                    const input = cofirmPassword.current;
+                                                    input.focus();
+                                                }
+                                            }}
+                                            className={`fa-regular fa-eye${hiddenConfirmPassword===true?'':'-slash'} absolute right-[20px] top-[16px] cursor-pointer text-[20px] text-textColor`}>
+                                        </i>
                                     </div>
-                                    {/* {formik.errors.password && formik.touched.password && <p>{formik.errors.password}</p>} */}
+                                    {formik.errors.confirmPassword && (<p className="text-[12px] mt-[-6px] text-red-500">{formik.errors.confirmPassword}</p>)}
                                 </div>
-                                <ButtonComponent loading>Đăng ký</ButtonComponent>
+                                {messageBoolean && (
+                                    <div>
+                                        <div className={`${success===true?"bg-[#97F7AC] border-[#0E8127] ":"bg-[#FFCDCF] border-[#F04248]"}  py-[8px] px-[15px] my-[-15px] rounded-[4px] border  text-[16px]`}>
+                                            <p className={`text-[16px] ${success===true?"text-[#0E8127]":"text-[#F04248]"} `}>{message}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                <ButtonComponent 
+                                    // loading
+                                    type="submit"
+                                >Đăng ký
+                                </ButtonComponent>
                             </form>
-                            {/* {message && (
-                                <div>
-                                    <p>{message}</p>
-                                </div>
-                            )} */}
+
                         </div>
                         <div className="h-auto w-[1px] bg-lineColor"></div>
                         <div className="flex flex-col gap-[40px] ">
