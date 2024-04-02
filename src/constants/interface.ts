@@ -24,7 +24,7 @@ export interface tokenProps {
     data: any;
     time?: string;
 }
-export interface Data {
+export interface SignUpProps {
     fullName: string;
     email: string;
     password: string;
