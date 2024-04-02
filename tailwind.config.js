@@ -8,7 +8,7 @@ module.exports = {
                 primary: "#8BC6EC",
                 secondary: "#9599E2",
                 textColor: "#666666",
-                colorBtn: "#4B7BE5",
+                blueLight: "#4B7BE5",
                 warningColor: "#F04248",
                 lineColor: "#D7D7D7",
             },
