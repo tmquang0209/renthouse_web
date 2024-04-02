@@ -6,7 +6,7 @@ export const userStatusCode = {
     1004: "Tên người dùng hoặc mật khẩu không hợp lệ",
     1005: "Đầu vào không hợp lệ",
     1006: "Người dùng đã tồn tại",
-    1007: "Đăng ký thành công",
+    1007: "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận đăng ký",
     1008: "Không thể tạo người dùng",
     1009: "Không thể gửi mã xác minh qua email",
     1010: "Tài khoản đã được xác minh thành công",
