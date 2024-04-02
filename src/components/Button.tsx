@@ -10,7 +10,7 @@ const ButtonComponent = (props: BtnProps) => {
         <>
             <button
                 type={type ? type : "button"}
-                className={`${className} w-32 rounded-sm bg-colorBtn px-1 py-2 text-white`}
+                className={className || "bg-blueLight w-32 rounded-sm px-1 py-2 text-white hover:bg-secondary"}
                 onClick={onClick}
                 style={style}
                 disabled={disabled}

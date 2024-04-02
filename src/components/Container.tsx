@@ -6,8 +6,8 @@ const Container = (props: ContainerProps) => {
 
     return (
         <>
-            <div className={`${gradient && "bg-gradient-to-br from-primary to-secondary"} h-screen w-screen overflow-y-auto py-10`}>
-                <div className={`container h-full ${className}`} style={style}>
+            <div className={`${gradient && "bg-gradient-to-br from-primary to-secondary"} py-10`}>
+                <div className={`container flex h-full items-center justify-center gap-5 flex-col ${className}`} style={style}>
                     {children}
                 </div>
             </div>
