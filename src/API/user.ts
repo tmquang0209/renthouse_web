@@ -4,24 +4,33 @@ import { createToken } from "../common/jwt";
 
 export const loginUser = async (data: any) => {
     try {
-        const jwt = await createToken({ data: { password: data.password } });
-        const response = await axios.post(`${API_URL}/users/login`, { ...data, password: jwt });
+        const encryptPassword = await createToken({ data: { password: data.password } });
+
+        const response = await axios.post(`${API_URL}/users/login`, { ...data, password: encryptPassword });
         return response.data;
     } catch (err: any) {
         console.error(err.response.data);
         return err.response.data;
     }
 };
-export const signInUser = async (data: any) => {
+
+export const signupUser = async (data: any) => {
     try {
-        const jwt = await createToken({ data: { password: data.password }, time: "40m" });
-        console.log("data:", { ...data, password: jwt, confirmPassword: jwt });
-        const response = await axios.post(`${API_URL}/users/signup`, { ...data, password: jwt, confirmPassword: jwt });
-        console.log("Thành công");
+        const encryptPassword = await createToken({
+            data: {
+                password: data.password,
+            },
+        });
+        const encryptConfirmPassword = await createToken({
+            data: {
+                password: data.confirmPassword,
+            },
+        });
+
+        const response = await axios.post(`${API_URL}/users/signup`, { ...data, password: encryptPassword, confirmPassword: encryptConfirmPassword });
         return response.data;
     } catch (err: any) {
-        throw new Error(`Lỗi ${err}`);
+        console.error(err);
+        return err.response.data;
     }
-}
-
-
+};
