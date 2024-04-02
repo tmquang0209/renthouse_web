@@ -1,18 +1,17 @@
 import React from "react";
-import { Container, Header } from "../components";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { selectMessage, selectSuccess, selectToken } from "../redux/Reducer/AuthSlice";
 import { useFormik } from "formik";
+import { Alert } from "antd";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { ButtonComponent, Container, Header, InputComponent, Line } from "../components";
+import { selectMessage, selectSuccess, selectToken } from "../redux/Reducer/AuthSlice";
 import { login } from "../redux/Actions";
 import { object, string } from "yup";
 import { Link } from "react-router-dom";
-import ButtonComponent from "../components/Button";
-import { Alert } from "antd";
 import { clearMessage } from "../redux/Reducer/AuthSlice";
 
 const loginSchema = object().shape({
-    username: string().required("Username is required").min(6, "Username must be at least 6 characters"),
-    password: string().required("Password is required").min(6, "Password must be at least 6 characters"),
+    username: string().required("Username is required").min(6, "Tên đăng nhập phải có ít nhất 6 kí tự"),
+    password: string().required("Password is required").min(8, "Mật khẩu phải có ít nhất 8 kí tự"),
 });
 
 const Login = () => {
@@ -21,6 +20,14 @@ const Login = () => {
     const success = useAppSelector(selectSuccess);
 
     const dispatch = useAppDispatch();
+
+    const [hidden, setHidden] = React.useState(false);
+
+    const handleHidden = (name: string) => {
+        setHidden(!hidden);
+        const input = document.getElementsByName(name)[0] as HTMLInputElement;
+        input.type = hidden ? "password" : "text";
+    };
 
     const handleSubmit = (values: any) => {
         dispatch(clearMessage());
@@ -59,7 +66,7 @@ const Login = () => {
                 <div className="mx-auto flex w-fit flex-col items-center gap-[30px] bg-white p-[28px]">
                     <div className="w-full">
                         <h1 className="mb-[15px] text-[22px] font-[500] font-bold text-textColor">Đăng nhập</h1>
-                        <div className="h-[1px] w-full bg-lineColor"></div>
+                        <Line />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2">
                         <div>
@@ -70,8 +77,7 @@ const Login = () => {
                                             Tên đăng nhập
                                             <p className="text-2xl text-red-600">*</p>
                                         </label>
-                                        <input
-                                            type="text"
+                                        <InputComponent
                                             name="username"
                                             onChange={formik.handleChange}
                                             value={formik.values.username}
@@ -86,12 +92,15 @@ const Login = () => {
                                             Mật khẩu
                                             <p className="text-2xl text-red-600">*</p>
                                         </label>
-                                        <input
+                                        <InputComponent
                                             type="password"
                                             name="password"
                                             onChange={formik.handleChange}
                                             value={formik.values.password}
                                             className="h-[40px] w-full rounded-[5px] border-[1px] border-lineColor px-[10px]"
+                                            eyes
+                                            hidden={hidden}
+                                            handleHidden={handleHidden}
                                         />
                                         {formik.errors.password && formik.touched.password && (
                                             <p className="text-[12px] text-red-500">{formik.errors.password}</p>
