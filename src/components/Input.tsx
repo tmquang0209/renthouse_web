@@ -10,10 +10,15 @@ interface InputComponentProps {
     hidden?: boolean;
     handleHidden?: (name: string) => void;
     placeholder?: string;
+    min?: number;
+    max?: number;
+    maxLength?: number;
+    minLength?: number;
+    autoComplete?: string;
 }
 
 const InputComponent = (props: InputComponentProps) => {
-    const { type, name, onChange, value, eyes, hidden, handleHidden, className, placeholder } = props;
+    const { type, name, onChange, value, eyes, hidden, handleHidden, className, placeholder, min, max, maxLength, minLength, autoComplete } = props;
 
     return (
         <div className="relative flex items-center">
@@ -24,6 +29,11 @@ const InputComponent = (props: InputComponentProps) => {
                 onChange={onChange}
                 value={value}
                 className={`h-[40px] w-full rounded-[5px] border-[1px] border-lineColor px-[10px] ${className || ""}`}
+                min={min}
+                max={max}
+                maxLength={maxLength}
+                minLength={minLength}
+                autoComplete={autoComplete}
             />
             {eyes && (
                 <i
