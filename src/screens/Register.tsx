@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { SignUpProps } from "../constants/interface";
 import { ButtonComponent, Container, InputComponent, Line } from "../components";
 import { object, string, ref } from "yup";
 import { signupUser } from "../API/user";
@@ -29,6 +28,7 @@ const registerSchema = object().shape({
 });
 
 const Register = () => {
+    const navigation = useNavigate();
     const [loading, setLoading] = useState(false);
     const [messageResponse, setMessageResponse] = useState<string>();
 
@@ -47,7 +47,16 @@ const Register = () => {
         try {
             const response = await signupUser(values);
             const message = userStatusCode[response.code as keyof typeof userStatusCode];
-
+            if (response.success) {
+                setTimeout(() => {
+                    // send with email
+                    navigation("/verify-code", {
+                        state: {
+                            email: values.email,
+                        },
+                    });
+                }, 2000);
+            }
             setMessageResponse(message);
         } catch (error) {
             console.error(error);
@@ -69,15 +78,15 @@ const Register = () => {
     return (
         <>
             <Header />
-            <Container gradient className="items-center justify-center">
-                <div className="mx-auto flex w-fit flex-col items-center gap-[30px] bg-white p-[28px]">
+            <Container gradient className="items-center justify-center sm:w-[800px]">
+                <div className="mx-auto flex w-full flex-col items-center gap-2 bg-white p-5">
                     <div className="w-full">
-                        <h1 className="mb-[15px] text-[22px] font-[500] font-bold text-textColor">Đăng ký</h1>
+                        <h1 className="mb-[15px] text-[22px] font-bold text-textColor">Đăng ký</h1>
                         <Line />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2">
                         <form onSubmit={formik.handleSubmit}>
-                            <div className="flex flex-col gap-[10px] p-5 sm:border-r-[1px]">
+                            <div className="flex flex-col gap-[10px] sm:border-r-[1px] sm:p-5">
                                 <>
                                     <label className="flex gap-[5px] text-[16px] font-[400] text-textColor">
                                         Email
@@ -161,8 +170,8 @@ const Register = () => {
                             </div>
                         </form>
 
-                        <div className="flex flex-col items-center p-5 text-center">
-                            <h1 className="pb-5 text-2xl font-bold">Hoặc đăng nhập bằng</h1>
+                        <div className="flex flex-col items-center text-center sm:p-5">
+                            <h1 className="pb-5 pt-5 text-xl font-bold sm:pt-0 sm:text-2xl">Hoặc đăng nhập bằng</h1>
                             <ButtonComponent className="flex w-full items-center justify-center gap-5 rounded-lg border-[1px] border-gray-200 bg-white px-7 py-3 font-bold">
                                 <img src="/img/gg.png" alt="" className="w-5" />
                                 <p className="text-black">Đăng nhập bằng Google</p>
@@ -170,7 +179,7 @@ const Register = () => {
                         </div>
                     </div>
                     <div className="flex flex-col text-center ">
-                        <h3 className="text-textColor ">Bằng việc tiếp tục, bạn đồng ý với Điều khoản sử dụng, Chính sách bảo mật, Quy chế, </h3>
+                        <h3 className="text-textColor">Bằng việc tiếp tục, bạn đồng ý với Điều khoản sử dụng, Chính sách bảo mật, Quy chế,</h3>
                         <Link className=" text-warningColor" to="">
                             Chính sách của chúng tôi
                         </Link>
