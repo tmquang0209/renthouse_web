@@ -135,7 +135,7 @@ const Login = () => {
                     <div className="flex flex-row items-center gap-[15px]">
                         <h1 className="text-[20px] font-[400] text-textColor ">Bạn chưa có tài khoản ?</h1>
                         <div className="h-[24px] w-[2px] bg-textColor"></div>
-                        <Link className="text-[20px] font-[400] text-colorBtn " to="/register">
+                        <Link className="text-colorBtn text-[20px] font-[400] " to="/register">
                             Đăng ký
                         </Link>
                     </div>
