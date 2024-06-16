@@ -28,7 +28,7 @@ export interface SignUpProps {
     fullName: string;
     email: string;
     password: string;
-    confirmPassword:string
+    confirmPassword: string;
 }
 
 export interface AuthProps {

@@ -3,8 +3,6 @@ import { login } from "../../Actions/auth";
 import { userStatusCode } from "../../../constants/statusCode";
 import { AuthProps } from "../../../constants/interface";
 
-
-
 const initialState: AuthProps = {
     user: null,
     token: "",
